@@ -6,4 +6,9 @@ export class ExternalObject<T> {
     [K: symbol]: T
   }
 }
-export function plus100(input: number): number
+export interface LabelMessage {
+  message: string
+  start: number
+  end: number
+}
+export function plus100(fileName: string, sourceFile: string, labels: Array<LabelMessage>): void
