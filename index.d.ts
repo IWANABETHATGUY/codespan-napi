@@ -11,7 +11,7 @@ export interface LabelMessage {
   start: number
   end: number
 }
-export function emitDiagnostic(
+export function emitError(
   fileName: string,
   sourceFile: string,
   labels: Array<LabelMessage>,
