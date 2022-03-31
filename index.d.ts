@@ -11,4 +11,9 @@ export interface LabelMessage {
   start: number
   end: number
 }
-export function plus100(fileName: string, sourceFile: string, labels: Array<LabelMessage>): void
+export function emitDiagnostic(
+  fileName: string,
+  sourceFile: string,
+  labels: Array<LabelMessage>,
+  errorMessage?: string | undefined | null,
+): void

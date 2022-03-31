@@ -25,14 +25,20 @@ pub struct LabelMessage {
   pub start: u32,
   pub end: u32,
 }
-#[napi]
-pub fn plus_100(file_name: String, source_file: String, labels: Vec<LabelMessage>) {
-  let mut files = SimpleFiles::new();
 
+#[napi]
+pub fn emit_error(
+  file_name: String,
+  source_file: String,
+  labels: Vec<LabelMessage>,
+  error_message: Option<String>,
+) {
+  let mut files = SimpleFiles::new();
+  let error_message = error_message.unwrap_or("Error occurred".to_string());
   let file_id = files.add(file_name, source_file);
   let diagnostic = Diagnostic::error()
-    .with_message("`case` clauses have incompatible types")
-    .with_code("E0308")
+    .with_message(error_message)
+    // .with_code("E0308")
     .with_labels(
       labels
         .into_iter()
@@ -48,6 +54,7 @@ pub fn plus_100(file_name: String, source_file: String, labels: Vec<LabelMessage
 
   term::emit(&mut writer.lock(), &config, &files, &diagnostic).unwrap();
 }
+
 
 // #[macro_use]
 // extern crate napi_derive;
