@@ -21,7 +21,7 @@
     "index.js"
   ],
   "napi": {
-    "name": "package-template",
+    "name": "codespan-napi",
     "triples": {
       "defaults": true,
       "additional": [
