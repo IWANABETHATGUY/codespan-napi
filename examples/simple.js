@@ -1,4 +1,4 @@
-const { emitDiagnostic } = require('./index')
+const { emitDiagnostic } = require('../index')
 const file = `let a = 3;
 let b = 4;
 
