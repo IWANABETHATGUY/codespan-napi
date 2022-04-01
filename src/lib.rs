@@ -5,7 +5,7 @@ use napi::bindgen_prelude::*;
 use std::collections::HashMap;
 
 use codespan_reporting::{
-    diagnostic::{self, Diagnostic as RDiagnostic, Label, LabelStyle},
+    diagnostic::{self, Diagnostic as RDiagnostic, Label, LabelStyle, Severity as RSeverity},
     files::{SimpleFile, SimpleFiles},
     term::{
         self,
@@ -36,14 +36,15 @@ pub enum DiagnosticLabelStyle {
     Primary,
     Secondary,
 }
-impl From<LabelStyle> for DiagnosticLabelStyle {
-    fn from(s: LabelStyle) -> Self {
-        match s {
-            LabelStyle::Primary => Self::Primary,
-            LabelStyle::Secondary => Self::Secondary,
+impl Into<LabelStyle> for DiagnosticLabelStyle {
+    fn into(self) -> LabelStyle {
+        match self {
+            DiagnosticLabelStyle::Primary => LabelStyle::Primary,
+            DiagnosticLabelStyle::Secondary => LabelStyle::Secondary,
         }
     }
 }
+#[derive(Clone)]
 #[napi(object)]
 /// a wrapper of `codespan_reporting::diagnostic::Label`
 pub struct DiagnosticLabel {
@@ -53,35 +54,29 @@ pub struct DiagnosticLabel {
 }
 
 #[napi]
-impl DiagnosticLabel {
-    #[napi(factory)]
-    pub fn primary(file_id: u32, info: LabelInfo) -> Self {
-        Self {
-            file_id,
-            style: DiagnosticLabelStyle::Primary,
-            info,
-        }
+pub fn primary_diagnostic_label(file_id: u32, info: LabelInfo) -> DiagnosticLabel {
+    DiagnosticLabel {
+        file_id,
+        style: DiagnosticLabelStyle::Primary,
+        info,
     }
-    #[napi(factory)]
-    pub fn secondary(file_id: u32, info: LabelInfo) -> Self {
-        Self {
-            file_id,
-            style: DiagnosticLabelStyle::Secondary,
-            info,
-        }
+}
+#[napi]
+pub fn secondary_diagnostic_label(file_id: u32, info: LabelInfo) -> DiagnosticLabel {
+    DiagnosticLabel {
+        file_id,
+        style: DiagnosticLabelStyle::Secondary,
+        info,
     }
 }
 
-impl From<Label<usize>> for DiagnosticLabel {
-    fn from(l: Label<usize>) -> Self {
-        Self {
-            style: l.style.into(),
-            file_id: l.file_id as u32,
-            info: LabelInfo {
-                message: l.message,
-                start: l.range.start as u32,
-                end: l.range.end as u32,
-            },
+impl Into<Label<usize>> for DiagnosticLabel {
+    fn into(self) -> Label<usize> {
+        Label {
+            style: self.style.into(),
+            file_id: self.file_id as usize,
+            range: self.info.start as usize..self.info.end as usize,
+            message: self.info.message,
         }
     }
 }
@@ -124,6 +119,19 @@ pub enum Severity {
     Help,
 }
 
+impl Into<RSeverity> for Severity {
+    fn into(self) -> RSeverity {
+        match self {
+            Severity::Bug => RSeverity::Bug,
+            Severity::Error => RSeverity::Error,
+            Severity::Warning => RSeverity::Warning,
+            Severity::Note => RSeverity::Note,
+            Severity::Help => RSeverity::Help,
+        }
+    }
+}
+
+#[derive(Clone)]
 #[napi]
 struct Diagnostic {
     severity: Severity,
@@ -133,6 +141,20 @@ struct Diagnostic {
     notes: Vec<String>,
 }
 
+impl Into<RDiagnostic<usize>> for Diagnostic {
+    fn into(mut self) -> RDiagnostic<usize> {
+        let mut s = RDiagnostic::new(self.severity.into());
+        s.code = self.code;
+        s.message = self.message;
+        let labels = std::mem::take(&mut self.labels)
+            .into_iter()
+            .map(|l| l.into())
+            .collect::<Vec<Label<usize>>>();
+        s.labels = labels;
+        s.notes = self.notes;
+        s
+    }
+}
 #[napi]
 impl Diagnostic {
     #[napi(factory)]
@@ -203,6 +225,19 @@ impl Diagnostic {
     #[napi]
     pub fn with_notes(&mut self, notes: Vec<String>) {
         self.notes = notes;
+    }
+
+    #[napi]
+    pub fn emit(&mut self, file_map: &FileMap) {
+        let writer = StandardStream::stderr(ColorChoice::Always);
+        let config = codespan_reporting::term::Config::default();
+        let severity = self.severity;
+        let mut diagnostic: RDiagnostic<usize> = self.clone().into();
+        // if let Some(code) = self.code.clone() {
+        //     diagnostic = diagnostic.with_code(code);
+        // }
+        // println!("{:?}", diagnostic);
+        term::emit(&mut writer.lock(), &config, &file_map.files, &diagnostic).unwrap();
     }
 }
 

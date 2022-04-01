@@ -21,6 +21,8 @@ export interface DiagnosticLabel {
   fileId: number
   info: LabelInfo
 }
+export function primaryDiagnosticLabel(fileId: number, info: LabelInfo): DiagnosticLabel
+export function secondaryDiagnosticLabel(fileId: number, info: LabelInfo): DiagnosticLabel
 export const enum Severity {
   Bug = 0,
   Error = 1,
@@ -49,4 +51,5 @@ export class Diagnostic {
   withCode(code: string): void
   withLabels(labels: Array<DiagnosticLabel>): void
   withNotes(notes: Array<string>): void
+  emit(fileMap: FileMap): void
 }
