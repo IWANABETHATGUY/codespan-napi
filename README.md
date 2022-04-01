@@ -12,7 +12,7 @@ yarn add codespan-napi
 ```
 
 ## Examples
-Here is an equivalent example to https://github.com/brendanzab/codespan readme example here [examples/simple.js](examples/simple.js)
+You could see an equivalent example to https://github.com/brendanzab/codespan readme here [examples/simple.js](examples/simple.js)
 
 ## Support matrix
 
