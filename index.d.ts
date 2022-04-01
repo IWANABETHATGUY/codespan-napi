@@ -51,5 +51,6 @@ export class Diagnostic {
   withCode(code: string): void
   withLabels(labels: Array<DiagnosticLabel>): void
   withNotes(notes: Array<string>): void
-  emit(fileMap: FileMap): void
+  emitStd(fileMap: FileMap): void
+  emitSvg(fileMap: FileMap): void
 }

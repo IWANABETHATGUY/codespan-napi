@@ -18,4 +18,4 @@ diagnostic.withLabels([
   secondaryDiagnosticLabel(m.getFileId('test2.js'), { start: 0, end: 3, message: 'here should be a const' }),
 ])
 
-diagnostic.emit(m)
+diagnostic.emitSvg(m)

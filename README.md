@@ -4,7 +4,7 @@
 
 > codespan-reporting node binding powered by napi-rs
 
-## This project is still WIP, see a simple example at examples/simple.js 
+## This project is still WIP
 ## Install this test package
 
 ```

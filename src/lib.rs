@@ -2,8 +2,9 @@
 #![allow(unused)]
 
 use napi::bindgen_prelude::*;
+use svg::emit_svg;
 use std::collections::HashMap;
-
+mod svg;
 use codespan_reporting::{
     diagnostic::{self, Diagnostic as RDiagnostic, Label, LabelStyle, Severity as RSeverity},
     files::{SimpleFile, SimpleFiles},
@@ -228,7 +229,7 @@ impl Diagnostic {
     }
 
     #[napi]
-    pub fn emit(&mut self, file_map: &FileMap) {
+    pub fn emit_std(&mut self, file_map: &FileMap) {
         let writer = StandardStream::stderr(ColorChoice::Always);
         let config = codespan_reporting::term::Config::default();
         let severity = self.severity;
@@ -238,6 +239,12 @@ impl Diagnostic {
         // }
         // println!("{:?}", diagnostic);
         term::emit(&mut writer.lock(), &config, &file_map.files, &diagnostic).unwrap();
+    }
+    #[napi]
+    pub fn emit_svg(&mut self, file_map: &FileMap) {
+        let severity = self.severity;
+        let mut diagnostic: RDiagnostic<usize> = self.clone().into();
+        emit_svg(&file_map.files, &diagnostic);
     }
 }
 
