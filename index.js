@@ -192,9 +192,10 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { DiagnosticLabelStyle, DiagnosticLabel, FileMap, emitError } = nativeBinding
+const { DiagnosticLabelStyle, FileMap, Severity, Diagnostic, emitError } = nativeBinding
 
 module.exports.DiagnosticLabelStyle = DiagnosticLabelStyle
-module.exports.DiagnosticLabel = DiagnosticLabel
 module.exports.FileMap = FileMap
+module.exports.Severity = Severity
+module.exports.Diagnostic = Diagnostic
 module.exports.emitError = emitError

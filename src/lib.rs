@@ -1,10 +1,11 @@
 #![deny(clippy::all)]
+#![allow(unused)]
 
 use napi::bindgen_prelude::*;
 use std::collections::HashMap;
 
 use codespan_reporting::{
-  diagnostic::{Diagnostic, Label, LabelStyle},
+  diagnostic::{self, Diagnostic as RDiagnostic, Label, LabelStyle},
   files::{SimpleFile, SimpleFiles},
   term::{
     self,
@@ -43,7 +44,7 @@ impl From<LabelStyle> for DiagnosticLabelStyle {
     }
   }
 }
-#[napi]
+#[napi(object)]
 /// a wrapper of `codespan_reporting::diagnostic::Label`
 pub struct DiagnosticLabel {
   pub style: DiagnosticLabelStyle,
@@ -114,6 +115,96 @@ impl FileMap {
     self.id_map.insert(file_name, id);
   }
 }
+#[napi]
+pub enum Severity {
+  Bug,
+  Error,
+  Warning,
+  Note,
+  Help,
+}
+
+#[napi]
+struct Diagnostic {
+  severity: Severity,
+  code: Option<String>,
+  message: String,
+  labels: Vec<DiagnosticLabel>,
+  notes: Vec<String>,
+}
+
+#[napi]
+impl Diagnostic {
+  #[napi(factory)]
+  pub fn error() -> Self {
+    Self {
+      severity: Severity::Error,
+      code: None,
+      message: "".to_string(),
+      labels: vec![],
+      notes: vec![],
+    }
+  }
+  #[napi(factory)]
+  pub fn bug() -> Self {
+    Self {
+      severity: Severity::Bug,
+      code: None,
+      message: "".to_string(),
+      labels: vec![],
+      notes: vec![],
+    }
+  }
+  #[napi(factory)]
+  pub fn warning() -> Self {
+    Self {
+      severity: Severity::Warning,
+      code: None,
+      message: "".to_string(),
+      labels: vec![],
+      notes: vec![],
+    }
+  }
+  #[napi(factory)]
+  pub fn help() -> Self {
+    Self {
+      severity: Severity::Help,
+      code: None,
+      message: "".to_string(),
+      labels: vec![],
+      notes: vec![],
+    }
+  }
+  #[napi(factory)]
+  pub fn note() -> Self {
+    Self {
+      severity: Severity::Note,
+      code: None,
+      message: "".to_string(),
+      labels: vec![],
+      notes: vec![],
+    }
+  }
+
+  #[napi]
+  pub fn with_message(&mut self, message: String) {
+    self.message = message;
+  }
+
+  #[napi]
+  pub fn with_code(&mut self, code: String) {
+    self.code = Some(code);
+  }
+
+  #[napi]
+  pub fn with_labels(&mut self, labels: Vec<DiagnosticLabel>) {
+    self.labels = labels;
+  }
+  #[napi]
+  pub fn with_notes(&mut self, notes: Vec<String>) {
+    self.notes = notes;
+  }
+}
 
 #[napi]
 pub fn emit_error(
@@ -125,7 +216,7 @@ pub fn emit_error(
   let mut files = SimpleFiles::new();
   let error_message = error_message.unwrap_or("Error occurred".to_string());
   let file_id = files.add(file_name, source_file);
-  let diagnostic = Diagnostic::error()
+  let diagnostic = RDiagnostic::error()
     .with_message(error_message)
     // .with_code("E0308")
     .with_labels(
