@@ -17,3 +17,8 @@ export function emitError(
   labels: Array<LabelMessage>,
   errorMessage?: string | undefined | null,
 ): void
+export class FileMap {
+  constructor()
+  getFileId(fileName: string): number
+  addFile(fileName: string, sourceFile: string): void
+}

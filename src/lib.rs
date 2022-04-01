@@ -1,8 +1,10 @@
 #![deny(clippy::all)]
 
+use std::collections::HashMap;
+
 use codespan_reporting::{
   diagnostic::{Diagnostic, Label},
-  files::SimpleFiles,
+  files::{SimpleFile, SimpleFiles},
   term::{
     self,
     termcolor::{ColorChoice, StandardStream},
@@ -24,6 +26,35 @@ pub struct LabelMessage {
   pub message: String,
   pub start: u32,
   pub end: u32,
+}
+#[napi]
+pub struct FileMap {
+  files: SimpleFiles<String, String>,
+  id_map: HashMap<String, usize>,
+}
+
+#[napi]
+impl FileMap {
+  #[napi(constructor)]
+  pub fn new() -> Self {
+    FileMap {
+      id_map: HashMap::new(),
+      files: SimpleFiles::new(),
+    }
+  }
+  #[napi]
+  pub fn get_file_id(&self, file_name: String) -> i32 {
+    match self.id_map.get(&file_name) {
+      Some(v) => *v as i32,
+      None => -1,
+    }
+  }
+
+  #[napi]
+  pub fn add_file(&mut self, file_name: String, source_file: String) {
+    let id = self.files.add(file_name.clone(), source_file);
+    self.id_map.insert(file_name, id);
+  }
 }
 
 #[napi]

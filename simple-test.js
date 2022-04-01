@@ -1,5 +1,9 @@
-const { plus100 } = require('./index')
+const { FileMap } = require('./index')
 
-console.assert(plus100(0) === 100, 'Simple test failed')
 
-console.info('Simple test passed')
+const m = new FileMap()
+
+m.addFile("test.js", "let a = 3")
+m.addFile("test2.js", "let a = 3")
+console.log(m.getFileId("test.js"))
+console.log(m.getFileId("test2.js"))

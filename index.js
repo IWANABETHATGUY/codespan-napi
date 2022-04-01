@@ -192,6 +192,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { emitError } = nativeBinding
+const { FileMap, emitError } = nativeBinding
 
+module.exports.FileMap = FileMap
 module.exports.emitError = emitError
