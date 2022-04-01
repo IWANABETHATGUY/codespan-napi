@@ -6,17 +6,29 @@ export class ExternalObject<T> {
     [K: symbol]: T
   }
 }
-export interface LabelMessage {
+export interface LabelInfo {
   message: string
   start: number
   end: number
 }
+export const enum DiagnosticLabelStyle {
+  Primary = 0,
+  Secondary = 1,
+}
 export function emitError(
   fileName: string,
   sourceFile: string,
-  labels: Array<LabelMessage>,
+  labels: Array<LabelInfo>,
   errorMessage?: string | undefined | null,
 ): void
+/** a wrapper of `codespan_reporting::diagnostic::Label` */
+export class DiagnosticLabel {
+  style: DiagnosticLabelStyle
+  fileId: number
+  info: LabelInfo
+  static primary(fileId: number, info: LabelInfo): DiagnosticLabel
+  static secondary(fileId: number, info: LabelInfo): DiagnosticLabel
+}
 export class FileMap {
   constructor()
   getFileId(fileName: string): number
