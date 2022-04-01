@@ -13,7 +13,10 @@ use codespan_reporting::term::termcolor::{Color, ColorSpec, StandardStream, Writ
 use codespan_reporting::term::{self, ColorArg};
 use std::io::{self, Write};
 
-pub fn emit_svg<'files, F: Files<'files>>(files: &'files F, diagnostic: &Diagnostic<F::FileId>) {
+pub fn emit_svg<'files, F: Files<'files>>(
+    files: &'files F,
+    diagnostic: &Diagnostic<F::FileId>,
+) -> String {
     // let mut files = SimpleFiles::new();
     let mut buffer = Vec::new();
     let mut writer = HtmlEscapeWriter::new(SvgWriter::new(&mut buffer));
@@ -34,9 +37,7 @@ pub fn emit_svg<'files, F: Files<'files>>(files: &'files F, diagnostic: &Diagnos
 
     let stdout = std::io::stdout();
     let writer = &mut stdout.lock();
-
-    write!(
-        writer,
+    let mut svg = format!(
         r#"<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
   <style>
     /* https://github.com/aaron-williamson/base16-alacritty/blob/master/colors/base16-tomorrow-night-256.yml */
@@ -95,19 +96,17 @@ pub fn emit_svg<'files, F: Files<'files>>(files: &'files F, diagnostic: &Diagnos
         font_size = font_size,
         width = width,
         height = height,
-    ).unwrap();
+    );
 
-    writer.write_all(&buffer).unwrap();
-
-    write!(
-        writer,
+    svg += &String::from_utf8(buffer).unwrap();
+    svg += &format!(
         "</pre>
     </div>
   </foreignObject>
 </svg>
 "
-    )
-    .unwrap();
+    );
+    svg
 }
 /// Rudimentary HTML escaper which performs the following conversions:
 ///

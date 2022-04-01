@@ -2,8 +2,8 @@
 #![allow(unused)]
 
 use napi::bindgen_prelude::*;
+use std::{collections::HashMap, fs::File, io::Write};
 use svg::emit_svg;
-use std::collections::HashMap;
 mod svg;
 use codespan_reporting::{
     diagnostic::{self, Diagnostic as RDiagnostic, Label, LabelStyle, Severity as RSeverity},
@@ -241,10 +241,12 @@ impl Diagnostic {
         term::emit(&mut writer.lock(), &config, &file_map.files, &diagnostic).unwrap();
     }
     #[napi]
-    pub fn emit_svg(&mut self, file_map: &FileMap) {
+    pub fn emit_svg(&mut self, file_map: &FileMap, path: String) {
         let severity = self.severity;
         let mut diagnostic: RDiagnostic<usize> = self.clone().into();
-        emit_svg(&file_map.files, &diagnostic);
+        let svg = emit_svg(&file_map.files, &diagnostic);
+        let mut file = File::create(path).unwrap();
+        file.write(svg.as_bytes()).unwrap();
     }
 }
 

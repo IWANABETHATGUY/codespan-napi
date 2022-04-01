@@ -65,4 +65,4 @@ diagnostic.withNotes([
   found type \`Nat\``,
 ])
 
-diagnostic.emitStd(map)
+diagnostic.emitSvg(map, "result.svg")
