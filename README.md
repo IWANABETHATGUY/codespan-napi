@@ -11,6 +11,9 @@
 yarn add codespan-napi
 ```
 
+## Examples
+Here is an equivalent example to https://github.com/brendanzab/codespan readme example here [examples/simple.js](examples/simple.js)
+
 ## Support matrix
 
 ### Operating Systems
