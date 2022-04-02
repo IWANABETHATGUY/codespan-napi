@@ -38,4 +38,5 @@ diagnostic.withNotes([
   found type \`number\``,
 ])
 
-diagnostic.emitStd(map)
+// diagnostic.emitStd(map)
+diagnostic.emitSvg(map, "multiple_file.svg")
