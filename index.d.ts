@@ -11,6 +11,7 @@ export interface LabelInfo {
   start: number
   end: number
 }
+export function createLabelInfo(start: number, end: number, message: string): LabelInfo
 export const enum DiagnosticLabelStyle {
   Primary = 0,
   Secondary = 1,

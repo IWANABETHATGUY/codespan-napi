@@ -193,6 +193,7 @@ if (!nativeBinding) {
 }
 
 const {
+  createLabelInfo,
   DiagnosticLabelStyle,
   primaryDiagnosticLabel,
   secondaryDiagnosticLabel,
@@ -202,6 +203,7 @@ const {
   emitError,
 } = nativeBinding
 
+module.exports.createLabelInfo = createLabelInfo
 module.exports.DiagnosticLabelStyle = DiagnosticLabelStyle
 module.exports.primaryDiagnosticLabel = primaryDiagnosticLabel
 module.exports.secondaryDiagnosticLabel = secondaryDiagnosticLabel
