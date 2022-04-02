@@ -33,6 +33,15 @@ pub struct LabelInfo {
 }
 
 #[napi]
+pub fn create_label_info(start: u32, end: u32, message: String) -> LabelInfo {
+    LabelInfo {
+        message,
+        start,
+        end,
+    }
+}
+
+#[napi]
 pub enum DiagnosticLabelStyle {
     Primary,
     Secondary,
