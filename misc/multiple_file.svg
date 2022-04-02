@@ -1,0 +1,71 @@
+<svg viewBox="0 0 882 245" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* https://github.com/aaron-williamson/base16-alacritty/blob/master/colors/base16-tomorrow-night-256.yml */
+    pre {
+      background: #1d1f21;
+      margin: 0;
+      padding: 10px;
+      border-radius: 6px;
+      color: #ffffff;
+      font: 12px SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    }
+
+    pre .bold { font-weight: bold; }
+
+    pre .fg.black   { color: #1d1f21; }
+    pre .fg.red     { color: #cc6666; }
+    pre .fg.green   { color: #b5bd68; }
+    pre .fg.yellow  { color: #f0c674; }
+    pre .fg.blue    { color: #81a2be; }
+    pre .fg.magenta { color: #b294bb; }
+    pre .fg.cyan    { color: #8abeb7; }
+    pre .fg.white   { color: #c5c8c6; }
+
+    pre .fg.black.bright    { color: #969896; }
+    pre .fg.red.bright      { color: #cc6666; }
+    pre .fg.green.bright    { color: #b5bd68; }
+    pre .fg.yellow.bright   { color: #f0c674; }
+    pre .fg.blue.bright     { color: #81a2be; }
+    pre .fg.magenta.bright  { color: #b294bb; }
+    pre .fg.cyan.bright     { color: #8abeb7; }
+    pre .fg.white.bright    { color: #ffffff; }
+
+    pre .bg.black   { background-color: #1d1f21; }
+    pre .bg.red     { background-color: #cc6666; }
+    pre .bg.green   { background-color: #b5bd68; }
+    pre .bg.yellow  { background-color: #f0c674; }
+    pre .bg.blue    { background-color: #81a2be; }
+    pre .bg.magenta { background-color: #b294bb; }
+    pre .bg.cyan    { background-color: #8abeb7; }
+    pre .bg.white   { background-color: #c5c8c6; }
+
+    pre .bg.black.bright    { background-color: #969896; }
+    pre .bg.red.bright      { background-color: #cc6666; }
+    pre .bg.green.bright    { background-color: #b5bd68; }
+    pre .bg.yellow.bright   { background-color: #f0c674; }
+    pre .bg.blue.bright     { background-color: #81a2be; }
+    pre .bg.magenta.bright  { background-color: #b294bb; }
+    pre .bg.cyan.bright     { background-color: #8abeb7; }
+    pre .bg.white.bright    { background-color: #ffffff; }
+  </style>
+
+  <foreignObject x="0" y="0" width="882" height="245">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <pre><span class="fg red bold bright">error[2345]</span><span class="bold bright">: Argument of type 'number' is not assignable to parameter of type 'string'</span>
+  <span class="fg blue">┌─</span> test.ts:1:23
+  <span class="fg blue">│</span>
+<span class="fg blue">1</span> <span class="fg blue">│</span> export function hello(<span class="fg red">a: string</span>) {
+  <span class="fg blue">│</span>                       <span class="fg red">^^^^^^^^^</span> <span class="fg red">expected first param has type `string`</span>
+  <span class="fg blue">│</span>
+  <span class="fg blue">┌─</span> test2.ts:2:7
+  <span class="fg blue">│</span>
+<span class="fg blue">2</span> <span class="fg blue">│</span> hello(<span class="fg red">2222</span>)
+  <span class="fg blue">│</span>       <span class="fg red">^^^^</span> <span class="fg red">the first argument type is `number`</span>
+  <span class="fg blue">│</span>
+  <span class="fg blue">=</span> expected type `string`
+      found type `number`
+
+</pre>
+    </div>
+  </foreignObject>
+</svg>
