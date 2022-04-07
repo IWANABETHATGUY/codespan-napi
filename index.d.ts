@@ -37,6 +37,7 @@ export function emitError(
   labels: Array<LabelInfo>,
   errorMessage?: string | undefined | null,
 ): void
+export function positionToOffset(source: string, line: number, column: number): number | undefined | null
 export class FileMap {
   constructor()
   getFileId(fileName: string): number

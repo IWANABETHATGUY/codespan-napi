@@ -201,6 +201,7 @@ const {
   Severity,
   Diagnostic,
   emitError,
+  positionToOffset,
 } = nativeBinding
 
 module.exports.createLabelInfo = createLabelInfo
@@ -211,3 +212,4 @@ module.exports.FileMap = FileMap
 module.exports.Severity = Severity
 module.exports.Diagnostic = Diagnostic
 module.exports.emitError = emitError
+module.exports.positionToOffset = positionToOffset
