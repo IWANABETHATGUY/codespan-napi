@@ -1,21 +1,21 @@
+const fs = require('fs')
+const path = require('path')
 const { FileMap, Diagnostic, primaryDiagnosticLabel, secondaryDiagnosticLabel } = require('./index')
 
+const index = fs.readFileSync('dist/examples/index.js').toString()
+const result = fs.readFileSync('dist/examples/result.js').toString()
 const m = new FileMap()
 // const a = DiagnosticLabel.primary(0, {})
 
-m.addFile(
-  './simple-test.js',
-  `let a = 3;
-let b = 4;`,
-)
-m.addFile('test2.js', 'let a = 3')
+m.addFile('dist/examples/index.js', index)
+m.addFile('dist/examples/result.js', result)
 
 let diagnostic = Diagnostic.warning()
 
 diagnostic.withMessage('Something wrong')
 diagnostic.withLabels([
-  primaryDiagnosticLabel(m.getFileId('./simple-test.js'), { start: 8, end: 15, message: 'here should be a const' }),
-  secondaryDiagnosticLabel(m.getFileId('test2.js'), { start: 0, end: 3, message: 'here should be a const' }),
+  primaryDiagnosticLabel(m.getFileId('dist/examples/result.js'), { start: 17, end: 18, message: 'Variable a can\'t be redefined' }),
+  secondaryDiagnosticLabel(m.getFileId('dist/examples/result.js'), { start: 4, end: 5, message: 'Variable a first defined here' }),
 ])
 
-diagnostic.emitSvg(m)
+diagnostic.emitStd(m)
