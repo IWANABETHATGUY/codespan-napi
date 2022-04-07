@@ -4,8 +4,7 @@
 
 > codespan-reporting node binding powered by napi-rs
 
-## This project is still WIP
-## Install this test package
+## Installation 
 
 ```
 yarn add codespan-napi
