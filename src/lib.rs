@@ -2,6 +2,7 @@
 #![allow(unused)]
 
 use napi::bindgen_prelude::*;
+use ropey::Rope;
 use std::{collections::HashMap, fs::File, io::Write};
 use svg::emit_svg;
 mod svg;
@@ -118,6 +119,11 @@ impl FileMap {
     pub fn add_file(&mut self, file_name: String, source_file: String) {
         let id = self.files.add(file_name.clone(), source_file);
         self.id_map.insert(file_name, id);
+    }
+
+    pub fn get_file(&self) -> Option<String> {
+        let res = self.files.get(0).ok()?;
+        Some(res.source().to_string())
     }
 }
 #[napi]
@@ -289,4 +295,12 @@ pub fn emit_error(
     let config = codespan_reporting::term::Config::default();
 
     term::emit(&mut writer.lock(), &config, &files, &diagnostic).unwrap();
+}
+
+#[napi]
+/// convert zero based line column position into zero based offset
+pub fn position_to_offset(source: String, line: u32, column: u32) -> Option<u32> {
+    let rope: Rope = ropey::Rope::from_str(&source);
+    let b = rope.try_line_to_byte(line as usize).ok()?;
+    Some(b as u32 + column)
 }

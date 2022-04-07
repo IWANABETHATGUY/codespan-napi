@@ -37,6 +37,8 @@ export function emitError(
   labels: Array<LabelInfo>,
   errorMessage?: string | undefined | null,
 ): void
+/** convert zero based line column position into zero based offset */
+export function positionToOffset(source: string, line: number, column: number): number | undefined | null
 export class FileMap {
   constructor()
   getFileId(fileName: string): number
