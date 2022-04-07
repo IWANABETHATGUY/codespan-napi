@@ -298,6 +298,7 @@ pub fn emit_error(
 }
 
 #[napi]
+/// convert zero based line column position into zero based offset
 pub fn position_to_offset(source: String, line: u32, column: u32) -> Option<u32> {
     let rope: Rope = ropey::Rope::from_str(&source);
     let b = rope.try_line_to_byte(line as usize).ok()?;
